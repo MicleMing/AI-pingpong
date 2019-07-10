@@ -1,0 +1,22 @@
+{
+  "name": "AI-pingpong",
+  "version": "1.0.0",
+  "description": "ai pingpong",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "webpack --watch --mode=development --config ./webpack.config.js",
+    "build": "webpack --mode=production --config ./webpack.config.js"
+  },
+  "dependencies": {
+    "jquery": "^3.4.1"
+  },
+  "devDependencies": {
+    "@types/jquery": "^3.3.30",
+    "awesome-typescript-loader": "^5.2.1",
+    "source-map-loader": "^0.2.4",
+    "typescript": "^3.5.3",
+    "webpack": "4.28.4",
+    "webpack-cli": "^3.2.1"
+  }
+}

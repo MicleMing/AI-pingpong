@@ -1,0 +1,33 @@
+@charset "utf-8";
+/* CSS Document */
+header{
+  margin-left:380px;
+}
+#playground{
+  width:600px;
+  height:300px;
+  position:relative;
+  overflow:hidden;
+  background:#FC6;
+  margin:0 auto;
+}
+#ball{
+  position:absolute;
+  width:20px;
+  height:20px;
+  border-radius:10px;
+  background:#999;
+  left:150px;
+  top:100px;
+}
+.paddle{
+  position:absolute;
+  width:30px;
+  height:70px;
+  left:50px;
+  top:70px;
+  background:#F93;
+}
+#paddleB{
+  left:550px;
+}
