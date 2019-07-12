@@ -9,10 +9,12 @@
     "build": "webpack --mode=production --config ./webpack.config.js"
   },
   "dependencies": {
-    "jquery": "^3.4.1"
+    "jquery": "^3.4.1",
+    "mathjs": "^6.0.3"
   },
   "devDependencies": {
     "@types/jquery": "^3.3.30",
+    "@types/mathjs": "^6.0.0",
     "awesome-typescript-loader": "^5.2.1",
     "source-map-loader": "^0.2.4",
     "typescript": "^3.5.3",

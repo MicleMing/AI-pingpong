@@ -29,7 +29,8 @@
     "esModuleInterop": true
   },
   "include": [
-    "pingpong/src/**/*"
+    // "pingpong/src/**/*"
+    "src/nn-genetic/**/*"
   ],
   "exclude": [
     "node_modules"

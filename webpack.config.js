@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = env => ({
-  entry: './pingpong/src/index.ts',
+  entry: './src/game/index.ts',
   output: {
     filename: "index.js",
     path: path.resolve(__dirname, "./dist")

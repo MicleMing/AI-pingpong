@@ -13,7 +13,7 @@ interface IBall {
 export default class PingPong {
   presskeys: Object = {};
   ball: IBall = {
-    speed: 3,
+    speed: 5,
     x: 150,
     y: 100,
     width: 20,
@@ -21,6 +21,7 @@ export default class PingPong {
     directionY: 1
   };
   timer: any = null;
+  start: boolean = false;
 
   score = {
     scoreA: 0,
@@ -33,9 +34,11 @@ export default class PingPong {
     this.game();
   }
 
+
   game() {
     this.timer = setInterval(this.gameloop.bind(this), 30);
     const presskeys = this.presskeys;
+    const self = this;
     $(document).keydown(function (e) {
       presskeys[e.which] = true;
     });
@@ -51,25 +54,25 @@ export default class PingPong {
 
   movePaddles() {
     const paddleTop = parseInt($("#playground").css("height")) - parseInt($(".paddle").css("height"));
-    if (this.presskeys[key.up]) {
+    if (this.presskeys[key.w]) {
       const top = parseInt($("#paddleA").css("top"));
       if (top > 0) {
         $("#paddleA").css("top", top - 5);
       }
     }
-    if (this.presskeys[key.down]) {
+    if (this.presskeys[key.s]) {
       const down = parseInt($("#paddleA").css("top"));
       if (down < paddleTop) {
         $("#paddleA").css("top", down + 5);
       }
     }
-    if (this.presskeys[key.w]) {
+    if (this.presskeys[key.up]) {
       const top = parseInt($("#paddleB").css("top"));
       if (top > 0) {
         $("#paddleB").css("top", top - 5);
       }
     }
-    if (this.presskeys[key.s]) {
+    if (this.presskeys[key.down]) {
       const down = parseInt($("#paddleB").css("top"));
       if (down < paddleTop) {
         $("#paddleB").css("top", down + 5);
