@@ -24,10 +24,7 @@ header{
   position:absolute;
   width:30px;
   height:70px;
-  left:50px;
+  left:550px;
   top:70px;
   background:#F93;
-}
-#paddleB{
-  left:550px;
 }
