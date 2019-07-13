@@ -1,5 +1,6 @@
-import { random, transpose, multiply } from 'mathjs';
+import { random, transpose, multiply, matrix, zeros } from 'mathjs';
 import sigmoid from './sigmoid';
+import addBias from './addBias';
 
 interface NNStructure {
   inputNodes: number;
@@ -24,24 +25,48 @@ export default class NNGenetic {
     this.inputNodes = inputNodes;
     this.hiddenNodes = hiddenNodes;
     this.outputNodes = outputNodes;
-    this.widgets_in = random([hiddenNodes, inputNodes]) as math.Matrix;
-    this.widgets_out = random([outputNodes, hiddenNodes]) as math.Matrix;
+    this.widgets_in = matrix(random([hiddenNodes, inputNodes]));
+    this.widgets_out = matrix(random([outputNodes, hiddenNodes]));
   }
 
   feedforward(inputs: math.Matrix): math.Matrix {
-    this.hiddenLayer = multiply(this.widgets_in, transpose(inputs)) as math.Matrix;
-    return this.hiddenLayer;
+    const a1 = addBias(inputs);
+    const z2 = matrix(multiply(addBias(this.widgets_in), transpose(a1)));
+    const a2 = addBias(this.active(z2));
+    const z3 = matrix(multiply(addBias(this.widgets_out), transpose(a2)));
+    const a3 = this.active(z3);
+    return a3;
   }
 
   active(inputs: math.Matrix) {
     return sigmoid(inputs);
   }
 
-  crossover() {
-
+  crossover(w1: math.Matrix, w2: math.Matrix): math.Matrix {
+    const size = w1.size();
+    const childW = matrix(zeros(size));
+    const x = childW.size()[0] / 2;
+    return childW.map((item, index) => {
+      if (index[0] < x) {
+        return w1.get([index[0], index[1]]);
+      }
+      return w2.get([index[0], index[1]]);
+    })
   }
 
-  mutate() {
+  mutate(widgets: math.Matrix, rate: number) {
+    return widgets.map((item) => {
+      if (rate > Math.random()) {
+        return Math.random();
+      }
+      return item;
+    })
+  }
 
+  serialize() {
+    const w1 = this.widgets_in.toJSON();
+    const w2 = this.widgets_out.toJSON();
+    console.log('w1:', w1);
+    console.log('w2', w2);
   }
 }

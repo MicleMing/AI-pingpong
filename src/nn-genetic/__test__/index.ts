@@ -1,11 +1,13 @@
 import { matrix } from 'mathjs';
 import NNGenetic from '../index'
 import sigmod from '../sigmoid';
+import addBias from '../addBias';
 
-
+const m = addBias(matrix([[1, 2], [2, 3], [4, 5]]));
+const n = addBias(matrix([5, 2, 3]));
 const s = sigmod(matrix([-10000, 0, 10000]))
 
-const nn = new NNGenetic({
+const nn1 = new NNGenetic({
   inputNodes: 2,
   hiddenNodes: 4,
   outputNodes: 2
@@ -13,8 +15,9 @@ const nn = new NNGenetic({
 
 const inputs = matrix([1, 2]);
 
-const l = nn.feedforward(inputs);
+const l = nn1.feedforward(inputs);
 
-const a = nn.active(l);
+const w = nn1.crossover(matrix([[1, 2], [2, 3], [4, 5]]), matrix([[9, 9], [9, 9], [9, 9]]))
+const mutate = nn1.mutate(matrix([[1, 2], [2, 3], [4, 5]]), 0.1)
 
-console.log(a);
+nn1.serialize();
