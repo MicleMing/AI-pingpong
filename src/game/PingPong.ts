@@ -1,35 +1,23 @@
 import $ from 'jquery';
+import Ball from './Ball';
+import Paddle from './Paddle';
 import key from './key';
-
-interface IBall {
-  speed: number;
-  x: number;
-  y: number;
-  width: number;
-  directionX: 1 | -1;
-  directionY: 1 | -1;
-}
 
 export default class PingPong {
   presskeys: Object = {};
-  ball: IBall = {
-    speed: 3,
-    x: 150,
-    y: 100,
-    width: 20,
-    directionX: 1,
-    directionY: 1
-  };
+  ball: Ball;
+  paddle: Paddle;
   timer: any = null;
 
   play() {
     $("#paddle").css("top", "100px");
+    this.ball = new Ball();
+    this.paddle = new Paddle();
     this.game();
   }
 
-
   game() {
-    this.timer = setInterval(this.gameloop.bind(this), 10);
+    this.timer = setInterval(this.gameloop.bind(this), 8);
     const presskeys = this.presskeys;
     $(document).keydown(function (e) {
       presskeys[e.which] = true;
@@ -45,51 +33,37 @@ export default class PingPong {
   }
 
   movePaddles() {
-    const paddleTop = parseInt($("#playground").css("height")) - parseInt($(".paddle").css("height"));
     if (this.presskeys[key.up]) {
-      const top = parseInt($("#paddle").css("top"));
-      if (top > 0) {
-        $("#paddle").css("top", top - 5);
-      }
+      this.paddle.moveUp();
     }
     if (this.presskeys[key.down]) {
-      const down = parseInt($("#paddle").css("top"));
-      if (down < paddleTop) {
-        $("#paddle").css("top", down + 5);
-      }
+      this.paddle.moveDown();
     }
   }
 
   moveBall() {
     const playwidth = parseInt($("#playground").css("width"));
     const playheight = parseInt($("#playground").css("height"));
-    const paddleLeft = parseInt($("#paddle").css("left"));
-    const paddleTop = parseInt($("#paddle").css("top"))
-    const paddleBottom = parseInt($("#paddle").css("top")) + parseInt($("#paddle").css("height"));
-    const ballLeft = this.ball.x + this.ball.speed * this.ball.directionX;
-    const ballTop = this.ball.y + this.ball.speed * this.ball.directionY;
+    const paddlePos = this.paddle.getPostion();
+    const { left, top } = this.ball.getPostion();
     // Lost and restart
-    if (ballLeft + this.ball.width >= playwidth) {
-      this.ball.x = 300;
-      this.ball.y = 150;
-      $("#ball").css({ "top": this.ball.y, "left": this.ball.x });
-      this.ball.directionX *= 1;
+    if (left + this.ball.getBall().width >= playwidth) {
+      this.ball.setPostion(300, 150);
+      this.ball.setDirectionX(1);
     }
 
-    if (ballTop <= 0 || ballTop + this.ball.width >= playheight) {
-      this.ball.directionY *= -1;
+    if (top <= 0 || top + this.ball.getBall().width >= playheight) {
+      this.ball.reverseDirectionY();
     }
 
-    if (ballLeft + this.ball.width <= 0) {
-      this.ball.directionX = 1;
+    if (left + this.ball.getBall().width <= 0) {
+      this.ball.setDirectionX(1);
     }
-    if (ballLeft + this.ball.width >= paddleLeft) {
-      if (ballTop >= paddleTop && ballTop <= paddleBottom) {
-        this.ball.directionX = -1;
+    if (left + this.ball.getBall().width >= paddlePos.left) {
+      if (top >= paddlePos.top && top <= paddlePos.bottom) {
+        this.ball.setDirectionX(-1);
       }
     }
-    this.ball.x = this.ball.x + this.ball.speed * this.ball.directionX;
-    this.ball.y = this.ball.y + this.ball.speed * this.ball.directionY;
-    $("#ball").css({ "left": this.ball.x, "top": this.ball.y });
+    this.ball.move();
   }
 }

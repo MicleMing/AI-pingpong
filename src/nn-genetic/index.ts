@@ -17,7 +17,6 @@ export default class NNGenetic {
   private widgets_out: math.Matrix;
 
   private inputs: math.Matrix;
-  private hiddenLayer: math.Matrix;
   private outputs: math.Matrix;
 
   constructor(props: NNStructure) {
