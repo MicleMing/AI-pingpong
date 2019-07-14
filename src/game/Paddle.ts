@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import NNGenetic from '../nn-genetic';
 
 interface IPaddle {
   x: number;
@@ -9,16 +10,22 @@ interface IPaddle {
 }
 
 export default class Paddle {
-  private paddle: IPaddle = {
+  public isAlive: boolean = true;
+  public brain: NNGenetic;
+  public fitness: number = 0;
+  private id: string;
+  public paddle: IPaddle = {
     x: 550,
     y: 150,
     width: 12,
-    height: 40,
+    height: 80,
     ele: null,
   };
-  constructor() {
-    const ele = this.createPaddle();
+  constructor(id: string, brain: NNGenetic) {
+    const ele = this.createPaddle(id);
     this.paddle.ele = ele;
+    this.id = id;
+    this.brain = brain;
     ele.css({
       left: this.paddle.x,
       top: this.paddle.y,
@@ -26,8 +33,9 @@ export default class Paddle {
       height: this.paddle.height,
     })
   }
-  createPaddle() {
+  createPaddle(id: string) {
     const paddle = document.createElement('div');
+    paddle.setAttribute('id', id);
     paddle.setAttribute('class', 'paddle');
     $('#playground').append(paddle);
     return $(paddle);
@@ -57,5 +65,22 @@ export default class Paddle {
     if (top < paddleTop) {
       this.paddle.ele.css("top", top + 3);
     }
+  }
+
+  move(inputs: math.Matrix) {
+    const output = this.brain.feedforward(inputs).toArray();
+    // this.brain.serialize();
+    // console.log(output);
+    if (output[0] > 0.5) {
+      this.moveUp();
+    } else {
+      this.moveDown();
+    }
+  }
+
+  failed() {
+    this.paddle.ele.remove();
+    this.isAlive = false;
+    console.log(`${this.id} is over`);
   }
 }

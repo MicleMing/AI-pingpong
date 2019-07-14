@@ -64,7 +64,9 @@ export default class Ball {
     const top = this.ball.y + this.ball.speed * this.ball.directionY;
     return {
       left,
-      top
+      top,
+      dx: this.ball.directionX,
+      dy: this.ball.directionY,
     };
   }
 }

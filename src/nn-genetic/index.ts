@@ -24,8 +24,8 @@ export default class NNGenetic {
     this.inputNodes = inputNodes;
     this.hiddenNodes = hiddenNodes;
     this.outputNodes = outputNodes;
-    this.widgets_in = matrix(random([hiddenNodes, inputNodes]));
-    this.widgets_out = matrix(random([outputNodes, hiddenNodes]));
+    this.widgets_in = matrix(random([hiddenNodes, inputNodes], -1, 1));
+    this.widgets_out = matrix(random([outputNodes, hiddenNodes], -1, 1));
   }
 
   feedforward(inputs: math.Matrix): math.Matrix {
@@ -44,7 +44,7 @@ export default class NNGenetic {
   crossover(w1: math.Matrix, w2: math.Matrix): math.Matrix {
     const size = w1.size();
     const childW = matrix(zeros(size));
-    const x = childW.size()[0] / 2;
+    const x = childW.size()[0] * Math.random();
     return childW.map((item, index) => {
       if (index[0] < x) {
         return w1.get([index[0], index[1]]);
@@ -67,5 +67,16 @@ export default class NNGenetic {
     const w2 = this.widgets_out.toJSON();
     console.log('w1:', w1);
     console.log('w2', w2);
+  }
+
+  getWidgets() {
+    return {
+      w1: this.widgets_in,
+      w2: this.widgets_out,
+    };
+  }
+  setWidgets(w1: math.Matrix, w2: math.Matrix) {
+    this.widgets_in = w1;
+    this.widgets_out = w2;
   }
 }
