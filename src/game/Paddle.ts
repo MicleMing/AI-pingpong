@@ -69,8 +69,6 @@ export default class Paddle {
 
   move(inputs: math.Matrix) {
     const output = this.brain.feedforward(inputs).toArray();
-    // this.brain.serialize();
-    // console.log(output);
     if (output[0] > 0.5) {
       this.moveUp();
     } else {

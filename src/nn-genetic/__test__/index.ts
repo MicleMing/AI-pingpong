@@ -1,10 +1,13 @@
-import { matrix } from 'mathjs';
+import { matrix, random } from 'mathjs';
 import NNGenetic from '../index'
 import sigmod from '../sigmoid';
 import addBias from '../addBias';
 
+
 const m = addBias(matrix([[1, 2], [2, 3], [4, 5]]));
 const n = addBias(matrix([5, 2, 3]));
+console.log(m)
+console.log(n)
 const s = sigmod(matrix([-10000, 0, 10000]))
 
 const nn1 = new NNGenetic({

@@ -2,7 +2,6 @@ import $ from 'jquery';
 import { matrix } from 'mathjs';
 import Ball from './Ball';
 import Paddle from './Paddle';
-import key from './key';
 import NNGenetic from '../nn-genetic';
 
 let time = 0;
@@ -50,12 +49,6 @@ export default class PingPong {
   }
 
   movePaddles() {
-    // if (this.presskeys[key.up]) {
-    //   this.paddle.moveUp();
-    // }
-    // if (this.presskeys[key.down]) {
-    //   this.paddle.moveDown();
-    // }
     const { left, top, dx, dy } = this.ball.getPostion();
     const nLeft = left / (600 - 20);
     const nTop = top / (400 - 20);
@@ -72,8 +65,8 @@ export default class PingPong {
     const alivePaddle = this.paddleGroup.filter(paddle => paddle.isAlive);
 
     if (!alivePaddle.length) {
-      let num = 50
-      if (time === 40) {
+      let num = 40
+      if (time === 20) {
         num = 1
       }
       this.nextGen(num);
@@ -114,11 +107,13 @@ export default class PingPong {
     $("#gen").text(`gen: ${time}`)
     const tops = this.pickTops();
     if (tops.length === 1) {
-      alert('game over');
+      const paddle = new Paddle(`paddle_${1}`, tops[0].brain);
+      this.paddleGroup = [];
+      this.paddleGroup.push(paddle);
       return;
     }
-    const top1Widgets = tops[0].brain.getWidgets();
-    const top2Widgets = tops[1].brain.getWidgets();
+    const top1Widgets = tops[0].brain.getWeights();
+    const top2Widgets = tops[1].brain.getWeights();
     this.paddleGroup = [];
     (new Array(num))
       .fill(undefined)
@@ -133,7 +128,7 @@ export default class PingPong {
           const w2 = brain.crossover(top1Widgets.w2, top2Widgets.w2);
           const mw1 = brain.mutate(w1, 0.1);
           const mw2 = brain.mutate(w2, 0.1);
-          brain.setWidgets(mw1, mw2);
+          brain.setWeights(mw1, mw2);
         }
         const paddle = new Paddle(`paddle_${index}`, brain);
         this.paddleGroup.push(paddle);
