@@ -1,4 +1,5 @@
 const path = require('path');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = env => ({
   entry: './src/game/index.ts',
@@ -20,6 +21,17 @@ module.exports = env => ({
 
       { enforce: "pre", test: /\.js$/, loader: "source-map-loader" }
     ]
-  }
-
+  },
+  plugins: [
+    new CopyPlugin([
+      {
+        from: './src/index.html',
+        to: './'
+      },
+      {
+        from: './src/index.css',
+        to: './'
+      }
+    ])
+  ]
 });
