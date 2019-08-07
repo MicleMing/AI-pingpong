@@ -8,6 +8,12 @@ module.exports = env => ({
     path: path.resolve(__dirname, "./dist")
   },
 
+  devServer: {
+    contentBase: path.join(__dirname, 'dist'),
+    compress: true,
+    port: 9000
+  },
+
   devtool: "source-map",
 
   resolve: {

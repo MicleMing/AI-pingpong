@@ -4,13 +4,14 @@ import Ball from './Ball';
 import Paddle from './Paddle';
 import NNGenetic from '../nn-genetic';
 
-let time = 0;
+const MAX_GENERATION = 20;
 
 export default class PingPong {
   presskeys: Object = {};
   ball: Ball;
   paddleGroup: Paddle[];
   timer: any = null;
+  generation: number = 0;
 
   play() {
     $("#paddle").css("top", "100px");
@@ -65,11 +66,13 @@ export default class PingPong {
     const alivePaddle = this.paddleGroup.filter(paddle => paddle.isAlive);
 
     if (!alivePaddle.length) {
-      let num = 40
-      if (time === 20) {
-        num = 1
+      if (this.generation === MAX_GENERATION) {
+        // this.nextGen(1);
+        alert('Game finished!');
+        clearInterval(this.timer);
+        return;
       }
-      this.nextGen(num);
+      this.nextGen();
       this.ball.setPostion(300, 150);
     }
 
@@ -102,9 +105,9 @@ export default class PingPong {
     return paddles.slice(0, 2);
   }
 
-  nextGen(num: number) {
-    time = time + 1;
-    $("#generation").text(`generation: ${time}`)
+  nextGen(num: number = 40) {
+    this.generation += 1;
+    $("#generation").text(`generation: ${this.generation}`)
     const tops = this.pickTops();
     if (tops.length === 1) {
       const paddle = new Paddle(`paddle_${1}`, tops[0].brain);
