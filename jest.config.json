@@ -7,5 +7,8 @@
     "\\.(ts)$": "ts-jest"
   },
   "testRegex": "/*.spec.(ts|js)$",
-  "rootDir": "src"
+  "rootDir": "src",
+  "setupFilesAfterEnv": [
+    "../setup.js"
+  ]
 }

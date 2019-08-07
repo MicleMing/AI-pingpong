@@ -31,17 +31,20 @@ describe("Test for Network Genetic Algorithm", () => {
     expect(s.toArray()).toEqual([0, 0.5, 1]);
   });
 
-  const nn1 = new NNGenetic({
-    inputNodes: 2,
-    hiddenNodes: 4,
-    outputNodes: 2
-  });
+  it("Crossover and mutate", () => {
+    const nn1 = new NNGenetic({
+      inputNodes: 2,
+      hiddenNodes: 4,
+      outputNodes: 2
+    });
 
-  const inputs = M.matrix([1, 2]);
+    const w = nn1.crossover(M.matrix([[1, 2], [2, 3], [4, 5]]), M.matrix([[9, 9], [9, 9], [9, 9]]));
+    expect(w.size()).toEqual([3, 2]);
+    expect(w.toArray()).toEqual([[1, 2], [2, 3], [9, 9]]);
 
-  const l = nn1.feedforward(inputs);
-
-  const w = nn1.crossover(M.matrix([[1, 2], [2, 3], [4, 5]]), M.matrix([[9, 9], [9, 9], [9, 9]]))
-  const mutate = nn1.mutate(M.matrix([[1, 2], [2, 3], [4, 5]]), 0.1)
-  // nn1.serialize();
+    const mutate1 = nn1.mutate(M.matrix([[1, 2], [2, 3], [4, 5]]), 0.1)
+    expect(mutate1.toArray()).toEqual([[1, 2], [2, 3], [4, 5]]);
+    const mutate2 = nn1.mutate(M.matrix([[1, 2], [2, 3], [4, 5]]), 0.6);
+    expect(mutate2.toArray()).toEqual([[0.5, 0.5], [0.5, 0.5], [0.5, 0.5]]);
+  })
 });

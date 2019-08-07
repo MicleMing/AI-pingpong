@@ -65,8 +65,10 @@ export default class NNGenetic {
   serialize() {
     const w1 = this.weights_in.toJSON();
     const w2 = this.weights_out.toJSON();
-    console.log('w1:', w1);
-    console.log('w2', w2);
+    return {
+      w1: JSON.stringify(w1),
+      w2: JSON.stringify(w2)
+    };
   }
 
   getWeights() {

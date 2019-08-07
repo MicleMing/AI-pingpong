@@ -104,7 +104,7 @@ export default class PingPong {
 
   nextGen(num: number) {
     time = time + 1;
-    $("#gen").text(`gen: ${time}`)
+    $("#generation").text(`generation: ${time}`)
     const tops = this.pickTops();
     if (tops.length === 1) {
       const paddle = new Paddle(`paddle_${1}`, tops[0].brain);

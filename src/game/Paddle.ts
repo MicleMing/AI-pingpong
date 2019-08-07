@@ -9,6 +9,7 @@ interface IPaddle {
   ele: any
 }
 
+
 export default class Paddle {
   public isAlive: boolean = true;
   public brain: NNGenetic;
@@ -38,6 +39,8 @@ export default class Paddle {
     paddle.setAttribute('id', id);
     paddle.setAttribute('class', 'paddle');
     $('#playground').append(paddle);
+    $('#alivePaddles .content').append(`<p class=${id}>${id}</p>`);
+    $('#diedPaddles .content').empty();
     return $(paddle);
   }
 
@@ -79,6 +82,7 @@ export default class Paddle {
   failed() {
     this.paddle.ele.remove();
     this.isAlive = false;
-    console.log(`${this.id} is over`);
+    $('#alivePaddles .content').find(`.${this.id}`).remove();
+    $('#diedPaddles .content').append(`<p class=${this.id}>${this.id}</p>`)
   }
 }
