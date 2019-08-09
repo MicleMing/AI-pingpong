@@ -1,10 +1,14 @@
 import $ from 'jquery';
-import { matrix } from 'mathjs';
 import Ball from './Ball';
 import Paddle from './Paddle';
 import NNGenetic from '../nn-genetic';
 
 const MAX_GENERATION = 20;
+const COUNTS_GENERATION = 50;
+const BG_WIDTH = 600;
+const BG_HEIGHT = 400;
+
+const createArray = (num: number) => (new Array(num)).fill(undefined)
 
 export default class PingPong {
   presskeys: Object = {};
@@ -21,11 +25,10 @@ export default class PingPong {
   }
 
   createPaddles() {
-    return (new Array(50))
-      .fill(undefined)
+    return createArray(COUNTS_GENERATION)
       .map((value, index) => {
         const brain = new NNGenetic({
-          inputNodes: 4, // d_x, d_y, left, top
+          inputNodes: 5, // top, d_x, d_y, left, top
           hiddenNodes: 8,
           outputNodes: 1
         })
@@ -51,12 +54,12 @@ export default class PingPong {
 
   movePaddles() {
     const { left, top, dx, dy } = this.ball.getPostion();
-    const nLeft = left / (600 - 20);
-    const nTop = top / (400 - 20);
-    const inputs = matrix([nLeft, nTop, dx, dy]);
-    this.paddleGroup.forEach((paddle) => paddle.move(inputs));
+    const ball = this.ball.getBall();
+    const nLeft = left / (BG_WIDTH - ball.width);
+    const nTop = top / (BG_HEIGHT - ball.width);
+    const ballInputs = [nLeft, nTop, dx, dy];
+    this.paddleGroup.forEach((paddle) => paddle.move(ballInputs));
   }
-
 
   moveBall() {
     const playheight = parseInt($("#playground").css("height"));
@@ -67,7 +70,6 @@ export default class PingPong {
 
     if (!alivePaddle.length) {
       if (this.generation === MAX_GENERATION) {
-        // this.nextGen(1);
         alert('Game finished!');
         clearInterval(this.timer);
         return;
@@ -99,34 +101,33 @@ export default class PingPong {
     this.ball.move();
   }
 
-  pickTops() {
+  pickTops(): Paddle[] {
     const paddles = this.paddleGroup
       .sort((p1, p2) => p2.fitness - p1.fitness);
     return paddles.slice(0, 2);
   }
 
-  nextGen(num: number = 40) {
+  nextGen(num: number = COUNTS_GENERATION) {
     this.generation += 1;
-    $("#generation").text(`generation: ${this.generation}`)
+    $("#generation").text(`generation: ${this.generation}`);
     const tops = this.pickTops();
-    if (tops.length === 1) {
-      const paddle = new Paddle(`paddle_${1}`, tops[0].brain);
-      this.paddleGroup = [];
-      this.paddleGroup.push(paddle);
-      return;
-    }
-    const top1Widgets = tops[0].brain.getWeights();
-    const top2Widgets = tops[1].brain.getWeights();
+    const top1 = tops[0];
+    const top2 = tops[1];
+
+    const top1Widgets = top1.brain.getWeights();
+    const top2Widgets = top2.brain.getWeights();
+
     this.paddleGroup = [];
-    (new Array(num))
-      .fill(undefined)
+    createArray(num)
       .map((value, index) => {
         const brain = new NNGenetic({
-          inputNodes: 4, // d_x, d_y, left, top
+          inputNodes: 5, // top, d_x, d_y, left, top
           hiddenNodes: 8,
           outputNodes: 1
-        })
-        if (tops[0].fitness > 0) {
+        });
+        if (top1.fitness) {
+          console.log('top1:', top1.fitness);
+          console.log('top2:', top2.fitness);
           const w1 = brain.crossover(top1Widgets.w1, top2Widgets.w1);
           const w2 = brain.crossover(top1Widgets.w2, top2Widgets.w2);
           const mw1 = brain.mutate(w1, 0.1);

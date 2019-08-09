@@ -12,4 +12,11 @@ const addBias = (mat: math.Matrix): math.Matrix => {
 
 }
 
+export const addOnes = (mat: math.Matrix): math.Matrix => {
+  const size = mat.size();
+  const one = ones([size[0], 1]);
+  return <math.Matrix>concat(one, mat);
+
+}
+
 export default addBias;

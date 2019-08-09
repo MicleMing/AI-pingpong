@@ -1,26 +1,34 @@
 import $ from 'jquery';
+import { matrix } from 'mathjs';
 import NNGenetic from '../nn-genetic';
 
-interface IPaddle {
+interface IPaddleObj {
   x: number;
   y: number;
   width: number;
   height: number;
-  ele: any
+  ele: JQuery<HTMLDivElement>;
 }
 
+interface IPaddle {
+  id: string;
+  isAlive: boolean;
+  fitness: number;
+  brain: NNGenetic;
+  paddle: IPaddleObj;
+}
 
-export default class Paddle {
-  public isAlive: boolean = true;
-  public brain: NNGenetic;
-  public fitness: number = 0;
-  private id: string;
-  public paddle: IPaddle = {
+export default class Paddle implements IPaddle {
+  id: string;
+  isAlive: boolean = true;
+  brain: NNGenetic;
+  fitness: number = 0;
+  paddle: IPaddleObj = {
     x: 550,
     y: 150,
     width: 12,
     height: 80,
-    ele: null,
+    ele: $('div'),
   };
   constructor(id: string, brain: NNGenetic) {
     const ele = this.createPaddle(id);
@@ -34,7 +42,7 @@ export default class Paddle {
       height: this.paddle.height,
     })
   }
-  createPaddle(id: string) {
+  createPaddle(id: string): JQuery<HTMLDivElement> {
     const paddle = document.createElement('div');
     paddle.setAttribute('id', id);
     paddle.setAttribute('class', 'paddle');
@@ -70,8 +78,10 @@ export default class Paddle {
     }
   }
 
-  move(inputs: math.Matrix) {
-    const output = this.brain.feedforward(inputs).toArray();
+  move(inputs: number[]) {
+    const { top } = this.getPostion();
+    const inputMatrix = matrix(inputs.concat([top / 400]));
+    const output = this.brain.feedforward(inputMatrix).toArray();
     if (output[0] > 0.5) {
       this.moveUp();
     } else {

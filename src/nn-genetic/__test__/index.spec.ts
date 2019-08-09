@@ -1,7 +1,7 @@
 import * as M from 'mathjs';
 import NNGenetic from '../index'
 import sigmod from '../sigmoid';
-import addBias from '../addBias';
+import addBias, { addOnes } from '../addBias';
 
 describe("Test for Network Genetic Algorithm", () => {
   it('Add Bias for Matrix', () => {
@@ -25,6 +25,12 @@ describe("Test for Network Genetic Algorithm", () => {
     expect(b).toBeGreaterThan(-1);
     expect(b).toBeLessThan(1);
   });
+
+  it("Add One for Matrix", () => {
+    const m = addOnes(M.matrix([[5, 2], [3, 4], [5, 6]]));
+    expect(m.toArray()).toEqual([[1, 5, 2], [1, 3, 4], [1, 5, 6]]);
+
+  })
 
   it("Sigmod Range", () => {
     const s = sigmod(M.matrix([-10000, 0, 10000]));

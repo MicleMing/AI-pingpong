@@ -2,6 +2,7 @@
 import $ from 'jquery';
 
 type Direction = 1 | -1;
+
 interface IBall {
   speed: number;
   x: number;
