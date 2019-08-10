@@ -28,7 +28,7 @@ export default class PingPong {
     return createArray(COUNTS_GENERATION)
       .map((value, index) => {
         const brain = new NNGenetic({
-          inputNodes: 5, // top, d_x, d_y, left, top
+          inputNodes: 5, // paddle top, d_x, d_y, left, top
           hiddenNodes: 8,
           outputNodes: 1
         })
@@ -36,8 +36,20 @@ export default class PingPong {
       });
   }
 
+  start() {
+    if (!this.timer) {
+      this.timer = setInterval(this.gameloop.bind(this), 5);
+    }
+  }
+
+  stop() {
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
+  }
+
   game() {
-    this.timer = setInterval(this.gameloop.bind(this), 5);
     const presskeys = this.presskeys;
     $(document).keydown(function (e) {
       presskeys[e.which] = true;
@@ -121,13 +133,11 @@ export default class PingPong {
     createArray(num)
       .map((value, index) => {
         const brain = new NNGenetic({
-          inputNodes: 5, // top, d_x, d_y, left, top
-          hiddenNodes: 8,
+          inputNodes: 5, // paddle top, d_x, d_y, left, top
+          hiddenNodes: 10,
           outputNodes: 1
         });
         if (top1.fitness) {
-          console.log('top1:', top1.fitness);
-          console.log('top2:', top2.fitness);
           const w1 = brain.crossover(top1Widgets.w1, top2Widgets.w1);
           const w2 = brain.crossover(top1Widgets.w2, top2Widgets.w2);
           const mw1 = brain.mutate(w1, 0.1);
