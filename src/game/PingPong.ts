@@ -29,7 +29,7 @@ export default class PingPong {
       .map((value, index) => {
         const brain = new NNGenetic({
           inputNodes: 5, // paddle top, d_x, d_y, left, top
-          hiddenNodes: 8,
+          hiddenNodes: 10,
           outputNodes: 1
         })
         return new Paddle(`paddle_${index}`, brain);
