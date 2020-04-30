@@ -10,7 +10,7 @@
     "test": "jest --coverage --config jest.config.json"
   },
   "dependencies": {
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "mathjs": "^6.0.3"
   },
   "devDependencies": {
